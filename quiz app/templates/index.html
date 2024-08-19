@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz</title>
+    <style>
+        body {
+            background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        .quiz-container {
+            max-width: 700px;
+            margin: 50px auto;
+            padding: 30px;
+            background: linear-gradient(135deg, #a1c4fd, #c2e9fb);
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+            border: 1px solid #a3cef1;
+        }
+        .college-title {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #004085;
+        }
+        .department-title {
+            text-align: center;
+            font-size: 20px;
+            margin-bottom: 30px;
+            color: #004085;
+        }
+        .question {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        .options {
+            margin-bottom: 20px;
+        }
+        .option {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #dcdcdc;
+            background-color: #e6e6fa; /* Soft lavender color */
+            transition: background-color 0.3s, border-color 0.3s, transform 0.3s;
+            cursor: pointer;
+        }
+        .option input[type="radio"] {
+            margin-right: 12px;
+        }
+        .option.correct {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+            animation: correctAnswer 0.5s ease-out;
+        }
+        .option.incorrect {
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+            animation: incorrectAnswer 0.5s ease-out;
+        }
+        .option.correct::after, .option.incorrect::after {
+            margin-left: auto;
+            opacity: 0;
+            transform: scale(0.5);
+            animation: iconAppear 0.5s forwards;
+        }
+        .option.correct::after {
+            content: "\f00c"; /* Font Awesome tick icon */
+            font-family: "Font Awesome 5 Free";
+            font-weight: 900;
+            color: #28a745;
+        }
+        .option.incorrect::after {
+            content: "\f00d"; /* Font Awesome cross icon */
+            font-family: "Font Awesome 5 Free";
+            font-weight: 900;
+            color: #dc3545;
+        }
+        .option:hover {
+            background-color: #dcdafc; /* Slightly darker lavender on hover */
+            border-color: #c5b9f0;
+            transform: scale(1.03);
+        }
+        .feedback {
+            display: none; /* Hide feedback text */
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 20px;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .correct {
+            color: #28a745; /* Green for correct */
+            background-color: #e1f5e1;
+            border: 1px solid #c0e0c0;
+        }
+        .incorrect {
+            color: #dc3545; /* Red for incorrect */
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+        }
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .button-container button, .button-container a button {
+            padding: 12px 24px;
+            font-size: 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            display: flex;
+            align-items: center;
+        }
+        .button-container button {
+            background-color: #20c997; /* Teal for buttons */
+            color: #ffffff;
+        }
+        .button-container button:hover {
+            background-color: #17a589;
+        }
+        .button-container a button {
+            background-color: #ff6f61; /* Coral for Previous and Next buttons */
+            color: #ffffff;
+        }
+        .button-container a button:hover {
+            background-color: #e55b49;
+        }
+        .button-container a {
+            text-decoration: none;
+        }
+        .progress {
+            font-size: 18px;
+            margin-bottom: 20px;
+            text-align: center;
+            color: #555;
+        }
+        .icon {
+            margin-right: 8px;
+        }
+
+        /* Animation Keyframes */
+        @keyframes correctAnswer {
+            0% {
+                background-color: #f7f9fc;
+                border-color: #dcdcdc;
+            }
+            100% {
+                background-color: #d4edda;
+                border-color: #c3e6cb;
+            }
+        }
+        @keyframes incorrectAnswer {
+            0% {
+                background-color: #f7f9fc;
+                border-color: #dcdcdc;
+            }
+            100% {
+                background-color: #f8d7da;
+                border-color: #f5c6cb;
+            }
+        }
+        @keyframes iconAppear {
+            0% {
+                opacity: 0;
+                transform: scale(0.5);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        .college-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #004085;
+}
+
+.college-title .logo {
+    width: 90px; /* Adjust the size as needed */
+    height: auto;
+    margin: 0 15px; /* Space between the text and logos */
+}
+
+.left-logo {
+    margin-right: 15px; /* Space between the left logo and the text */
+}
+
+.right-logo {
+    margin-left: 15px; /* Space between the text and the right logo */
+}
+
+    </style>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+<div class="college-title">
+    <img src="./static/assests/img/pani.png" alt="Left Logo" class="logo left-logo">
+    <h1 style="color:black">Panimalar Engineering College</h1>
+    <img src="./static/assests/img/ieee.png" alt="Right Logo" class="logo right-logo">
+
+</div>
+<center><h2 style="color:black;align-items:center;justify-content: center;">Dept. Artificial Intelligence and Datascience</h2></center>
+    <div class="quiz-container">
+
+        <div class="department-title">Topic {{topic}}</div>
+
+        <div class="progress">
+            <span>Question <span id="question-number">{{ current_question_index + 1 }}</span> of {{ total_questions }}</span>
+        </div>
+        <div id="question" class="question">{{ current_question_index + 1 }} {{ questions[current_question_index].Q|safe }}</div>
+        <div class="options" id="options-container">
+            <!-- Options will be dynamically updated here -->
+        </div>
+        <div id="feedback" class="feedback"></div> <!-- Feedback text removed -->
+        <div class="button-container">
+            <button type="button" onclick="navigateQuestion(-1)" id="prev-button" style="display: none;">
+                <i class="fas fa-arrow-left icon"></i>Previous
+            </button>
+            <button type="button" onclick="checkAnswer()">
+                <i class="fas fa-check icon"></i>Check Answer
+            </button>
+            <button type="button" onclick="navigateQuestion(1)" id="next-button">
+                <i class="fas fa-arrow-right icon"></i>Next
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const totalQuestions = {{ total_questions }};
+        let currentQuestionIndex = {{ current_question_index }};
+        const questions = {{ questions|tojson }};
+        let correctAnswer = ''; // Initialize correctAnswer
+
+        function decodeHtml(html) {
+            const txt = document.createElement('textarea');
+            txt.innerHTML = html;
+            return txt.value;
+        }
+
+        function updateQuestion() {
+            const questionElement = document.getElementById('question');
+            const optionsContainer = document.getElementById('options-container');
+            const questionNumberElement = document.getElementById('question-number');
+
+            // Update question text
+            questionElement.innerHTML = questions[currentQuestionIndex].Q;
+
+            // Update options
+            optionsContainer.innerHTML = '';
+            questions[currentQuestionIndex].MCQs.forEach(option => {
+                const label = document.createElement('label');
+                label.className = 'option';
+                label.innerHTML = `
+                    <input type="radio" name="answer" value="${option}">
+                    ${option}
+                `;
+                optionsContainer.appendChild(label);
+            });
+
+            // Update correctAnswer for the current question
+            correctAnswer = decodeHtml(questions[currentQuestionIndex].CORRECT);
+
+            // Update question number
+            questionNumberElement.textContent = currentQuestionIndex + 1;
+
+            // Show/Hide Previous button
+            const prevButton = document.getElementById('prev-button');
+            prevButton.style.display = currentQuestionIndex > 0 ? 'inline-block' : 'none';
+
+            // Show/Hide Next button
+            const nextButton = document.getElementById('next-button');
+            nextButton.style.display = currentQuestionIndex < totalQuestions - 1 ? 'inline-block' : 'none';
+
+            // Clear feedback and selected answer
+            document.getElementById('feedback').style.display = 'none';
+        }
+
+        function checkAnswer() {
+            const selectedAnswer = document.querySelector('input[name="answer"]:checked');
+
+            if (selectedAnswer) {
+                const answerValue = selectedAnswer.value.trim(); // Trim to remove any extra spaces
+                const selectedLabel = selectedAnswer.closest('.option');
+                const feedbackElement = document.getElementById('feedback');
+
+                // Debugging: Log the values being compared
+                console.log("Selected Answer:", answerValue);
+                console.log("Correct Answer:", correctAnswer);
+
+                if (answerValue === correctAnswer.trim()) {
+                    selectedLabel.classList.add('correct');
+                } else {
+                    selectedLabel.classList.add('incorrect');
+                }
+
+                // Hide feedback text
+                feedbackElement.style.display = 'none';
+            }
+        }
+
+        function navigateQuestion(direction) {
+            currentQuestionIndex += direction;
+            if (currentQuestionIndex >= 0 && currentQuestionIndex < totalQuestions) {
+                updateQuestion();
+            }
+        }
+
+        // Initialize the first question
+        updateQuestion();
+    </script>
+</body>
+</html>
